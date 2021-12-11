@@ -16,7 +16,6 @@ NULL
 #' @param ... Additional parameters passed to internal functions. Currently it
 #' supports the additional arguments seen in \code{sgo_bng_lonlat} and
 #' \code{sgo_lonlat_bng}.
-#' this description and which parameters may admit...
 #' @details
 #' This function is a wrapper of specific transformation functions
 #' (\code{\link{sgo_bng_lonlat}}, \code{\link{sgo_en_wgs84}},
@@ -325,7 +324,7 @@ sgo_transform.sgo_points <- function(x, to=NULL, ...) {
 .ARGS_TO_4978 <- list(list(),                                              #4326
                       list(list(to=4326), list()),                         #3857
                       list(list(to=27700), list(to=4326), list()),         #4277
-                      list(list(to=4326), list()),                        #27700
+                      list(list(to=4979), list()),                        #27700
                       list(list(to=4326), list()),                         #4258
                       list(),                                              #4979
                       NULL,
@@ -339,7 +338,7 @@ sgo_transform.sgo_points <- function(x, to=NULL, ...) {
 .FUN_TO_4937 <- list(list(sgo_set_gcs),
                      list(sgo_en_wgs84, sgo_set_gcs),
                      list(sgo_lonlat_bng, sgo_bng_lonlat, sgo_set_gcs),    #4277
-                     list(sgo_bng_lonlat, sgo_set_gcs),                   #27700
+                     list(sgo_bng_lonlat),                                #27700
                      list(sgo_set_gcs),                                    #4258
                      list(sgo_set_gcs),                                    #4979
                      list(sgo_cart_lonlat, sgo_set_gcs),                   #4978
@@ -351,7 +350,7 @@ sgo_transform.sgo_points <- function(x, to=NULL, ...) {
 .ARGS_TO_4937 <- list(list(to=4937),                                       #4326
                       list(list(to=4326), list(to=4937)),                  #3857
                       list(list(to=27700), list(to=4258), list(to=4937)),  #4277
-                      list(list(), list(to=4937)),                        #27700
+                      list(list(to=4937)),                                #27700
                       list(to=4937),                                       #4258
                       list(to=4937),                                       #4979
                       list(list(), list(to=4937)),                         #4978
@@ -365,7 +364,7 @@ sgo_transform.sgo_points <- function(x, to=NULL, ...) {
 .FUN_TO_4936 <- list(list(sgo_set_gcs, sgo_lonlat_cart),
                      list(sgo_en_wgs84, sgo_set_gcs, sgo_lonlat_cart),     #3857
                      list(sgo_lonlat_bng, sgo_bng_lonlat, sgo_lonlat_cart),#4277
-                     list(sgo_bng_lonlat, sgo_lonlat_cart),
+                     list(sgo_bng_lonlat, sgo_lonlat_cart),               #27700
                      list(sgo_lonlat_cart),                                #4258
                      list(sgo_set_gcs, sgo_lonlat_cart),                   #4979
                      list(sgo_cart_lonlat, sgo_set_gcs, sgo_lonlat_cart),  #4978
@@ -377,7 +376,7 @@ sgo_transform.sgo_points <- function(x, to=NULL, ...) {
 .ARGS_TO_4936 <- list(list(list(to=4258), list()),
                       list(list(to=4326), list(to=4258), list()),
                       list(list(to=27700), list(to=4258), list()),
-                      list(list(to=4258), list()),
+                      list(list(to=4937), list()),                        #27700
                       list(),                                              #4258
                       list(list(to=4937), list()),
                       list(list(), list(to=4937), list()),

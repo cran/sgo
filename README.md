@@ -7,8 +7,9 @@ sgo - Simple Geographical Operations (with OSGB36)
 
 [![R-CMD-check](https://github.com/clozanoruiz/sgo/workflows/R-CMD-check/badge.svg?branch=main)](https://github.com/clozanoruiz/sgo/actions?workflow=R-CMD-check)
 [![coverage](https://codecov.io/gh/clozanoruiz/sgo/branch/main/graph/badge.svg?token=Qd5gkpnxFc)](https://app.codecov.io/gh/clozanoruiz/sgo?branch=main)
+[![CRAN](https://www.r-pkg.org/badges/version/sgo)](https://cran.r-project.org/package=sgo)
 [![GitHub release (latest
-SemVer)](https://img.shields.io/github/v/release/clozanoruiz/sgo.svg)](https://github.com/clozanoruiz/sgo/releases)
+SemVer)](https://img.shields.io/github/v/release/clozanoruiz/sgo.svg?sort=semver&label=GitHub)](https://github.com/clozanoruiz/sgo/releases)
 [![license](https://img.shields.io/badge/license-BSD%202--Clause-green.svg)](https://opensource.org/licenses/BSD-2-Clause)
 <!-- badges: end -->
 
@@ -84,7 +85,7 @@ text(locs, labels=locs$n, pos=1, cex=0.9)
 text(sr, labels="Stirling", pos=1, cex=0.9)
 ```
 
-<img src="man/figures/README-unnamed-chunk-2-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-2-1.png" width="50%" />
 
 ``` r
 
@@ -168,3 +169,11 @@ A <- sgo_area(pol, interpolate=10)
 sprintf("%1.2f", A)
 #> [1] "133610.64"
 ```
+
+## Benchmark
+
+Very simple benchmark in a Intel(R) Core(TM) i7-6700HQ CPU @2.60GHz, and
+16 GB of RAM. See the code of this README file to see the R statements
+used.
+
+<img src="man/figures/README-unnamed-chunk-4-1.png" width="100%" />
