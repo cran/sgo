@@ -10,7 +10,7 @@ sgo_bng_lonlat(x, to = 4258, OSTN = TRUE, OD = FALSE)
 }
 \arguments{
 \item{x}{A \code{sgo_points} object with coordinates defined in the projected
-coordinate system BNG (EPSGs 27700 or 7405)}
+coordinate system BNG (EPSGs 27700 or 7405).}
 
 \item{to}{Numeric. Sets the \code{epsg} code of the destination Geodetic
 Coordinate System. 4258 (ETRS89) by default.}
@@ -52,9 +52,9 @@ If, for historical reasons, longitude/latitude coordinates must have the old
 OSGB36 datum, then the parameter \code{to} must be set to 4277.
 
 \strong{Note}: Grid references rounded to whole metres will give
-latitude/logitude that are accurate to about 5 decimal places. In the UK,
-0.00001 of a degree of latitude is about 70cm and 0.00001 of a degree of
-longitude is about 1m.
+latitude/longitude that are accurate to about 5 decimal places: in Great
+Britain, 1/100000 of a degree of latitude is about 70cm and 1/100000 of a
+degree of longitude is about 1m.
 All those coordinates outside the rectangle covered by OSTN15
 will be automatically computed using the small Helmert transformation. Such
 coordinates will be accurate up to about +/-5 metres.
@@ -64,7 +64,7 @@ OSTN15.
 }
 \examples{
 p <- sgo_points(list(651409.903, 313177.270), epsg=27700)
-p.84 <- sgo_bng_lonlat(p) #ETRS89 lon/lat
+p.89 <- sgo_bng_lonlat(p) #ETRS89 lon/lat
 p.36 <- sgo_bng_lonlat(p, to=4277) #OSGB36 lon/lat
 }
 \references{
@@ -72,5 +72,5 @@ Ordnance Survey Limited, 2018. \emph{Transformations and OSGM15 user guide}
 }
 \seealso{
 \code{\link{sgo_points}}, \code{\link{sgo_lonlat_bng}},
-\code{\link{sgo_set_gcs}}, \code{\link{sgo_transform}}.
+\code{\link{sgo_coordinates}}, \code{\link{sgo_transform}}.
 }

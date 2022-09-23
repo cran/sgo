@@ -23,7 +23,7 @@ NULL
 #' \code{\link{sgo_laea_etrs}}, \code{\link{sgo_etrs_laea}},
 #' \code{\link{sgo_cart_lonlat}}, \code{\link{sgo_lonlat_cart}}) that transforms
 #' the coordinate system of a set of points to any of the supported coordinate
-#' systems by this package.
+#' systems.
 #'
 #' Please note that this package assumes that the Coordinate Reference Systems
 #' (CRS) ETRS89 and WGS84 are the same within the UK, but this shouldn't be a
@@ -92,8 +92,8 @@ sgo_transform.sgo_points <- function(x, to=NULL, ...) {
   input.args <- input.args[unique(names(input.args))] # remove repeated args
 
   # Get list of functions and their arguments needed to run this transformation
-  FUN_list <- .FUNCS[which(.FUNCS$FROM == x$epsg), as.character(to)][[1]]
-  ARGS_list <- .ARGS[which(.ARGS$FROM == x$epsg), as.character(to)][[1]]
+  FUN_list <- .FUNCS[match(x$epsg, .FUNCS$FROM), as.character(to)][[1]]
+  ARGS_list <- .ARGS[match(x$epsg, .ARGS$FROM), as.character(to)][[1]]
   empty_args <- !length(ARGS_list)
 
   # Run functions sequentially over the input

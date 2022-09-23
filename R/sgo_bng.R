@@ -11,7 +11,7 @@
 #' @usage sgo_lonlat_bng(x, to=27700, OSTN=TRUE, OD=FALSE)
 #' @param x A \code{sgo_points} object with coordinates defined in a Geodetic
 #' Coordinate System expressed as Longitude and Latitude (e.g. epsg=4258, 4937,
-#' 4326, 4979 or 4277)
+#' 4326, 4979 or 4277).
 #' @param to Specifies the EPSG code to convert the coordinates to. It can only
 #' take the following values: \code{27700} or \code{7405}.
 #' @param OSTN Logical variable indicating whether use OSTN15 transformation
@@ -55,7 +55,7 @@
 #' 1m grid square. If \code{OD=TRUE} a column named \code{height.datum} is
 #' added to the resulting object.
 #' @seealso \code{\link{sgo_points}}, \code{\link{sgo_bng_lonlat}},
-#' \code{\link{sgo_set_gcs}}, \code{\link{sgo_transform}}.
+#' \code{\link{sgo_coordinates}}, \code{\link{sgo_transform}}.
 #' @references
 #' Ordnance Survey Limited, 2018. \emph{Transformations and OSGM15 user guide}
 #' @examples
@@ -206,7 +206,7 @@ sgo_lonlat_bng.sgo_points <- function(x, to=27700, OSTN=TRUE, OD=FALSE) {
 #' @name sgo_bng_lonlat
 #' @usage sgo_bng_lonlat(x, to = 4258, OSTN = TRUE, OD = FALSE)
 #' @param x A \code{sgo_points} object with coordinates defined in the projected
-#' coordinate system BNG (EPSGs 27700 or 7405)
+#' coordinate system BNG (EPSGs 27700 or 7405).
 #' @param to Numeric. Sets the \code{epsg} code of the destination Geodetic
 #' Coordinate System. 4258 (ETRS89) by default.
 #' @param OSTN Logical variable indicating whether use OSTN15 transformation
@@ -235,9 +235,9 @@ sgo_lonlat_bng.sgo_points <- function(x, to=27700, OSTN=TRUE, OD=FALSE) {
 #' OSGB36 datum, then the parameter \code{to} must be set to 4277.
 #'
 #' \strong{Note}: Grid references rounded to whole metres will give
-#' latitude/logitude that are accurate to about 5 decimal places. In the UK,
-#' 0.00001 of a degree of latitude is about 70cm and 0.00001 of a degree of
-#' longitude is about 1m.
+#' latitude/longitude that are accurate to about 5 decimal places: in Great
+#' Britain, 1/100000 of a degree of latitude is about 70cm and 1/100000 of a
+#' degree of longitude is about 1m.
 #' All those coordinates outside the rectangle covered by OSTN15
 #' will be automatically computed using the small Helmert transformation. Such
 #' coordinates will be accurate up to about +/-5 metres.
@@ -249,12 +249,12 @@ sgo_lonlat_bng.sgo_points <- function(x, to=27700, OSTN=TRUE, OD=FALSE) {
 #' Longitude/Latitude.If \code{OD=TRUE} a column named \code{height.datum} is
 #' added to the resulting object.
 #' @seealso \code{\link{sgo_points}}, \code{\link{sgo_lonlat_bng}},
-#' \code{\link{sgo_set_gcs}}, \code{\link{sgo_transform}}.
+#' \code{\link{sgo_coordinates}}, \code{\link{sgo_transform}}.
 #' @references
 #' Ordnance Survey Limited, 2018. \emph{Transformations and OSGM15 user guide}
 #' @examples
 #' p <- sgo_points(list(651409.903, 313177.270), epsg=27700)
-#' p.84 <- sgo_bng_lonlat(p) #ETRS89 lon/lat
+#' p.89 <- sgo_bng_lonlat(p) #ETRS89 lon/lat
 #' p.36 <- sgo_bng_lonlat(p, to=4277) #OSGB36 lon/lat
 #' @export
 sgo_bng_lonlat <- function(x, to=4258, OSTN=TRUE, OD=FALSE)
@@ -412,8 +412,8 @@ sgo_bng_lonlat.sgo_points <- function(x, to=4258, OSTN=TRUE, OD=FALSE) {
   dN <- N - N0
   dE <- E - E0
   # NatGrid true origin is 49°N 2°W:
-  phi0 <- 49 / RAD.TO.GRAD
-  lambda0 <- -2 / RAD.TO.GRAD
+  phi0 <- 49 / RAD.TO.DEG
+  lambda0 <- -2 / RAD.TO.DEG
 
   phi <- phi0 + dN/af
   lambda <- lambda0
@@ -470,7 +470,7 @@ sgo_bng_lonlat.sgo_points <- function(x, to=4258, OSTN=TRUE, OD=FALSE) {
   phi <- phi + ( -VII + ( VIII - IX * dE2 ) * dE2) * dE2
   lambda <- lambda + ( X + ( -XI + ( XII - XIIA * dE2 ) * dE2) * dE2) * dE
 
-  unname(cbind(lambda * RAD.TO.GRAD, phi * RAD.TO.GRAD))
+  unname(cbind(lambda * RAD.TO.DEG, phi * RAD.TO.DEG))
 
 }
 
@@ -481,8 +481,8 @@ sgo_bng_lonlat.sgo_points <- function(x, to=4258, OSTN=TRUE, OD=FALSE) {
 #' @param datum A string containing "OSGB36", "WGS84" or "ETRS89"
 .project.onto.grid <- function (lon, lat, datum) {
 
-  phi <- lat / RAD.TO.GRAD
-  lambda <- lon / RAD.TO.GRAD
+  phi <- lat / RAD.TO.DEG
+  lambda <- lon / RAD.TO.DEG
 
   ellipsoid <- lonlat.datum[lonlat.datum$datum==datum, "ellipsoid"]
   a <- lonlat.ellipsoid[lonlat.ellipsoid$ellipsoid==ellipsoid, "a"]   # Major
@@ -492,8 +492,8 @@ sgo_bng_lonlat.sgo_points <- function(x, to=4258, OSTN=TRUE, OD=FALSE) {
   f0 <- 0.9996012717      # Convergence factor
   af <- a * f0            # NatGrid scale factor on central meridian
   # NatGrid true origin is 49°N 2°W:
-  phi0 <- 49 / RAD.TO.GRAD
-  lambda0 <- -2 / RAD.TO.GRAD
+  phi0 <- 49 / RAD.TO.DEG
+  lambda0 <- -2 / RAD.TO.DEG
   n0 <- -100000; e0 <- 400000   # northing & easting of true origin, metres
   n <- (a-b)/(a+b)
 

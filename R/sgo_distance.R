@@ -2,8 +2,8 @@
 #' @title Calculate distance(s) between points
 #'
 #' @description
-#' Calculates the distance between OS National Grid Reference points or using
-#' the Harvesine or Vicenty formulae for points with angular coordinates.
+#' Calculates the distance between OS National Grid Reference points. Points
+#' with angular coordinates will use the Harvesine or Vicenty formulae.
 #'
 #' @name sgo_distance
 #' @usage sgo_distance(x, y, by.element = FALSE,
@@ -28,23 +28,24 @@
 #' coordinates: When \code{which = "Vicenty"} the Vincenty's formula is used to
 #' calculate the geodesics (distance) on an ellipsoid to an accuracy of up to
 #' a millimetre. If such accuracy is not needed, \code{which} can also
-#' accept the string "Harvesine" which calculates great-circle distance between
-#' two points on a sphere. Harvesines are faster to compute than the Vicenty
-#' distances but can result in an error of up to 0.5\%.
+#' accept the string "Harvesine" which calculates the great-circle distance
+#' between two points on a sphere. Harvesines are faster to compute than the
+#' Vicenty distances but can result in an error of up to 0.5\%.
 #'
 #' When working with (BNG) planar coordinates the Local Scale Factor is the
 #' scale distortion inherent in the map projection at a point. When
-#' \code{grid.true.distance} is \code{FALSE} the Euclidean distance in the
-#' plane is calculated. When it is \code{TRUE} the function computes a line
+#' \code{grid.true.distance} is \code{TRUE} the function computes a line
 #' scale factor using Simpson's Rule to achieve greater accuracy and
-#' approximate the distance to the true geodesic distance.
+#' approximate the distance to the true geodesic distance. When it is
+#' \code{FALSE} the Euclidean distance in the plane is calculated.
 #'
 #' \strong{Note}: Considering F as the scale factor, we have that
-#' True distance (S) = grid distance(s) / F\cr
+#' S (True distance) = s (grid distance) / F\cr
 #' For most purposes the scale factor can be taken as constant for distances up
 #' to 20km (errors not exceeding 1 or 2 parts er million) and equal to the mid
 #' point of the line. For longer lines, this routine computes a scale factor for
-#' both ends (F1 and F2) and the mid point (Fm) and uses Simpson's Rule:\cr
+#' both ends (F1 and F2) and the mid point (Fm) and then uses the Simpson's
+#' Rule:\cr
 #' F = 1/6(F1 + 4Fm + F2)
 #'
 #' @return
@@ -123,9 +124,9 @@ sgo_distance.sgo_points <- function(x, y, by.element=FALSE,
   } else {
 
     p1 <- matrix(unlist(x[coords], use.names = FALSE),
-                 ncol = 2, byrow = FALSE) / RAD.TO.GRAD
+                 ncol = 2, byrow = FALSE) / RAD.TO.DEG
     p2 <- matrix(unlist(y[coords], use.names = FALSE),
-             ncol = 2, byrow = FALSE) / RAD.TO.GRAD
+             ncol = 2, byrow = FALSE) / RAD.TO.DEG
 
     if (by.element) {
 
@@ -209,7 +210,7 @@ sgo_distance.sgo_points <- function(x, y, by.element=FALSE,
   bF0 <- b * F0
   n <- (a-b) / (a+b)
   N0 <- -100000; E0 <- 400000 # True origin
-  phi0 <- 49 / RAD.TO.GRAD
+  phi0 <- 49 / RAD.TO.DEG
 
   # Initial latitude φ'
   dN <- N - N0
@@ -233,7 +234,7 @@ sgo_distance.sgo_points <- function(x, y, by.element=FALSE,
     phi <- phi + (dN - M) / aF0
   }
 
-  cos.phi <- cos(phi)
+  #cos.phi <- cos(phi)
   sin.phi <- sin(phi)
 
   splat <- 1 - e2 * sin.phi * sin.phi
@@ -251,7 +252,7 @@ sgo_distance.sgo_points <- function(x, y, by.element=FALSE,
 
   dE <- E - E0
   dE2 <- dE * dE
-  F <- F0 * (1 + dE2 * XXI + dE2 * dE2 * XXII)
+  F0 * (1 + dE2 * XXI + dE2 * dE2 * XXII) # return F
 
 }
 

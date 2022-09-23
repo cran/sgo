@@ -18,8 +18,8 @@
 #' National Grid References, with or without whitespace separators.
 #' (e.g. 'SU 387 148').
 #' @param col Character string with the name of the 'column' containing the
-#' vector of NGR values, it is required when \code{x} is a list with more than
-#' one column.
+#' vector of NGR values, it is required when \code{x} is a list or data.frame
+#' with more than one column.
 #' @param check.only Logical parameter. If it is set to TRUE then the routine
 #' returns a logical vector indicating which references are correct.
 #' @details
@@ -102,14 +102,8 @@ sgo_ngr_bng.list <- function(x, col=NULL, check.only=FALSE) {
   }
 
   # Get numeric values of letter references, mapping A->0, B->1, C->2, etc:
-  a.code <- strtoi(charToRaw("A"), 16L)
-  l1 <- strtoi(vapply(substr(toupper(x), 1, 1),
-                      charToRaw, as.raw(0)), 16L) - a.code
-  l2 <- strtoi(vapply(substr(toupper(x), 2, 2),
-                      charToRaw, as.raw(0)), 16L) - a.code
-  # Shuffle down letters after 'I' since 'I' is not used in grid:
-  l1 <- ifelse (l1 > 7, l1-1, l1)
-  l2 <- ifelse (l2 > 7, l2-1, l2)
+  l1 <- .ngr.LUT$num[match(substr(toupper(x), 1, 1), .ngr.LUT$letter)]
+  l2 <- .ngr.LUT$num[match(substr(toupper(x), 2, 2), .ngr.LUT$letter)]
 
   # Convert grid letters into 100km-square indexes from false origin
   # (grid square SV):
@@ -185,13 +179,13 @@ sgo_ngr_bng.default <- function(x, col=NULL, check.only=FALSE) {
 #' accordingly. When \code{digits=0}, it returns the numeric format of the grid
 #' references.
 #'
-#' Note that rather than being rounded, national grid references are truncated
+#' Note that National Grid references are truncated instead of being rounded
 #' when converting to less precise references (as the OS system demands). By
 #' doing so, the grid reference refers to the lower left corner of the relevant
 #' square - to ensure the more precise polygon will remain within the boundaries
 #' of the less precise polygon.
 #' @return
-#' A list with at least one element named 'ngr'.
+#' A list with at least one column named 'ngr'.
 #' @seealso \code{\link{sgo_points}}, \code{\link{sgo_ngr_bng}}.
 #' @examples
 #' sgo <- sgo_points(list(x=247455, y=706338, name="Ben Venue"),
@@ -253,13 +247,9 @@ sgo_bng_ngr.sgo_points <- function(x, digits=10) {
   l1 <- (19-n100k) - (19-n100k)%%5 + trunc((e100k+10)/5)
   l2 <- ((19-n100k)*5)%%25 + e100k%%5
 
-  # Compensate for skipped 'I' and build grid letter-pairs
-  l1 <- ifelse(l1 > 7, l1+1, l1)
-  l2 <- ifelse(l2 > 7, l2+1, l2)
-  # A is the (charcode) origin to which l1 and l2 codes will be added:
-  a.code <- strtoi(charToRaw("A"), 16L)
-  let.pair <- paste0( vapply(as.raw(l1 + a.code), rawToChar,""),
-                      vapply(as.raw(l2 + a.code), rawToChar,""))
+  # Build grid letter-pairs
+  let.pair <- paste0(.ngr.LUT$letter[match(l1, .ngr.LUT$num)],
+                     .ngr.LUT$letter[match(l2, .ngr.LUT$num)])
 
   # Strip 100km-grid indices from easting & northing, and reduce precision
   # Note that rather than being rounded, the easting and northing are truncated

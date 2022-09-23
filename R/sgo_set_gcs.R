@@ -14,11 +14,11 @@
 #' \code{4326}, \code{4979}, \code{4978} or \code{4277}.
 #' @details
 #' Changes the geodetic coordinate system of a set of points. Note that the
-#' precision of various datums will vary, and (original) WGS-84 is not defined
+#' precision of various datums will vary, and the original WGS-84 is not defined
 #' to be accurate to better than ±1 metre. Most transformations shouldn't be
 #' assumed to be accurate to better than a meter; between OSGB36 and WGS84
 #' somewhat less - the lost of accuracy can be up to ±5m when using single
-#' Helmert transformations).
+#' Helmert transformations.
 #'
 #' Input points with a projected coordinate system (e.g. 27700, 7405, 3035 or
 #' 3857) are not allowed.
@@ -26,7 +26,7 @@
 #' \strong{Warning}
 #' This function is mainly for internal use of the program. Since it relies on a
 #' single Helmert transformation it is not recommended to call it directly. Use
-#' any other of the transformation functions available (\link{sgo}).
+#' any other of the transformation functions available (\link{sgo-package}).
 #' @return
 #' An object of class 'sgo_points'.
 #' @seealso \code{\link{sgo_points}}, \code{\link{sgo_transform}}.
@@ -151,8 +151,8 @@ sgo_set_gcs.sgo_points <- function (x, to=NULL) {
   datum <- points$datum
   ellipsoid <- lonlat.datum[lonlat.datum$datum==datum, "ellipsoid"]
 
-  phi <- points$y / RAD.TO.GRAD
-  lambda <- points$x / RAD.TO.GRAD
+  phi <- points$y / RAD.TO.DEG
+  lambda <- points$x / RAD.TO.DEG
   # height above ellipsoid
   h <- if (points$dimension=="XYZ") points$z else rep(0, length(points$x))
   a <- lonlat.ellipsoid[lonlat.ellipsoid$ellipsoid==ellipsoid, "a"]
@@ -189,9 +189,9 @@ sgo_set_gcs.sgo_points <- function (x, to=NULL) {
   tz <- t$tz                  # z-shift
   s1 <- t$s + 1               # scale: normalise parts-per-million to (s+1)
   # x, y, z rotations: normalise arcseconds to radians
-  rx <- (t$rx/3600) / RAD.TO.GRAD
-  ry <- (t$ry/3600) / RAD.TO.GRAD
-  rz <- (t$rz/3600) / RAD.TO.GRAD
+  rx <- (t$rx/3600) / RAD.TO.DEG
+  ry <- (t$ry/3600) / RAD.TO.DEG
+  rz <- (t$rz/3600) / RAD.TO.DEG
 
   # apply transform
   x2 <- tx + x1*s1 - y1*rz + z1*ry
@@ -218,7 +218,7 @@ sgo_set_gcs.sgo_points <- function (x, to=NULL) {
   ellipsoid <- lonlat.datum[lonlat.datum$datum==datum, "ellipsoid"]
   params <- lonlat.ellipsoid[lonlat.ellipsoid$ellipsoid==ellipsoid, 2:5]
   a <- params$a
-  b <- params$b
+  #b <- params$b
   e2 <- params$e2
 
   p <- sqrt(x*x + y*y)  # distance from minor axis
@@ -236,8 +236,8 @@ sgo_set_gcs.sgo_points <- function (x, to=NULL) {
     if ( max(abs(old.phi - phi)) < 1e-12 ) { break }
   }
 
-  lat <- phi * RAD.TO.GRAD
-  lon <- lambda * RAD.TO.GRAD
+  lat <- phi * RAD.TO.DEG
+  lon <- lambda * RAD.TO.DEG
   # height above ellipsoid
   h <- unname(p / cos(phi) - nu)
 
@@ -264,8 +264,7 @@ sgo_set_gcs.sgo_points <- function (x, to=NULL) {
 #' @return
 #' An object of class \code{sgo_points} whose coordinates are defined as a
 #' x, y and z cartesian vector.
-#' @seealso \code{\link{sgo_points}}, \code{\link{sgo_lonlat_bng}},
-#' \code{\link{sgo_set_gcs}}.
+#' @seealso \code{\link{sgo_points}}, \code{\link{sgo_lonlat_bng}}.
 #' @examples
 #' p <- sgo_points(list(-5.00355049, 56.7968571), epsg=4326)
 #' p.xyz <- sgo_lonlat_cart(p) #Cartesian coordinates
@@ -325,8 +324,7 @@ sgo_lonlat_cart.sgo_points <- function(x) {
 #' @return
 #' An object of class \code{sgo_points} with polar coordinates (Longitude,
 #' Latitude and Ellipsoid Height).
-#' @seealso \code{\link{sgo_points}}, \code{\link{sgo_bng_lonlat}},
-#' \code{\link{sgo_set_gcs}}.
+#' @seealso \code{\link{sgo_points}}, \code{\link{sgo_bng_lonlat}}.
 #' @examples
 #' p <- sgo_points(list(3487823.234, -305433.201, 5313739.634), epsg=4936)
 #' p.xyz <- sgo_cart_lonlat(p) #Cartesian coordinates

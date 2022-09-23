@@ -5,10 +5,24 @@
 \alias{sgo_coordinates}
 \title{Extracts coordinates from an \code{sgo_points} object}
 \usage{
-sgo_coordinates(x)
+sgo_coordinates(x, names.xyz = NULL, as.latlon = FALSE,
+ll.format=NULL)
 }
 \arguments{
 \item{x}{An instance of \code{sgo_points}.}
+
+\item{names.xyz}{Character vector. New names for the columns x, y and
+possibly z of the object \code{x}.}
+
+\item{as.latlon}{Logical variable. When \code{x} is defined in a geodetic
+coordinate system as lon/lat and this parameter is set to \code{TRUE} then
+it returns the coordinates ordered as lat/lon.}
+
+\item{ll.format}{Character variable. Applies a format to the returned
+coordinates when \code{x} is defined in a geodetic coordinate system. As of
+now it only accepts \code{DMS}, which will return strings of
+coordinates formatted as degrees, minutes and seconds (certain accuracy will
+be lost because seconds are rounded to the second decimal).}
 }
 \value{
 A matrix with 2 or 3 named columns.

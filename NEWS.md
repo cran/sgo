@@ -1,3 +1,12 @@
+# sgo 0.9.2
+
+- Bumped minimum R required version to 3.5 (sysdata.rda uses workspace format version 3)
+- Replaced `testthat` with `tinytest` for Unit Testing.
+- sgo_coordinates gained a couple of paramaters meant for geodetic coordinates.
+- Improved the speed of NGR conversions.
+- A little tidy-up of both code and documentation.
+
+
 # sgo 0.9.1
 
 - **Fixed**: Now, when converting from 2D BNG to 3D BNG, the input is first converted  

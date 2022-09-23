@@ -36,7 +36,7 @@
 #' It will provide much less accurate results for features usually represented
 #' at smalle scale (countries, continents, etc.).
 #' @return
-#' Value of the area in squared metres round up to the first decimal.
+#' Value of the area in squared metres rounded up to the first decimal.
 #' @references
 #' Sandi Berk & Miran Ferlan, 2018. \emph{Accurate area determination in the
 #' cadaster: case study of Slovenia}. Cartography and Geographic Information
@@ -93,7 +93,7 @@ sgo_area.sgo_points <- function(x, interpolate = NULL, ...) {
 
       mat.x.grad <- matrix(unlist(x[coords], use.names=FALSE),
              ncol = 2, byrow = FALSE)
-      mat.x <- mat.x.grad / RAD.TO.GRAD
+      mat.x <- mat.x.grad / RAD.TO.DEG
       x.shift.one <- rbind(mat.x[-1, ], mat.x[1, ])
 
       # calculate distances and bearings
@@ -118,7 +118,7 @@ sgo_area.sgo_points <- function(x, interpolate = NULL, ...) {
                                              datum = x$datum, iterations=100L)
 
       inter.locations <- cbind(x = d.vicenty$lon, y = d.vicenty$lat) *
-        RAD.TO.GRAD
+        RAD.TO.DEG
       inter.locations <- cbind(inter.locations,
                                p=rep(need.int, times=num.segments))
 
@@ -211,10 +211,10 @@ sgo_area.sgo_points <- function(x, interpolate = NULL, ...) {
   e2 <- params$e2
   e <- sqrt(e2)
 
-  lambda <- p$x / RAD.TO.GRAD
-  phi <- p$y / RAD.TO.GRAD
-  lambda.c <- c$x / RAD.TO.GRAD
-  phi.c <- c$y / RAD.TO.GRAD
+  lambda <- p$x / RAD.TO.DEG
+  phi <- p$y / RAD.TO.DEG
+  lambda.c <- c$x / RAD.TO.DEG
+  phi.c <- c$y / RAD.TO.DEG
 
   sin.phi <- sin(phi)
   sin.phi.c <- sin(phi.c)
